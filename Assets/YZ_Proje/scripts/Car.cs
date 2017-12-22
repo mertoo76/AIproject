@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class carController : MonoBehaviour {
+public class Car : MonoBehaviour {
     public int roadNumber;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -13,7 +13,6 @@ public class carController : MonoBehaviour {
 	void Update () {
 		
 	}
-
     void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag.Equals("Road"))
@@ -24,5 +23,4 @@ public class carController : MonoBehaviour {
             roadNumber = rp.PieceNumber;
         }
     }
-
 }
