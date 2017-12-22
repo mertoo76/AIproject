@@ -87,6 +87,11 @@ public class Chromosome
         return 0;
     }
 
+    public void setFitness(float fitness)
+    {
+        this.fitness = fitness;
+    }
+
 }
 
 
@@ -96,7 +101,7 @@ public class GeneticAlgorithm
  public  int NUMB_OF_ELITE_CHROMOSOMES = 2;
  public  int TOURNAMENT_SELECTION_SIZE = 4;
  public  System.Random random = new System.Random();
-    Population evolve(Population pop)
+  public  Population evolve(Population pop)
     {
         mutate_population(crossover_population(pop));
         return pop;
@@ -112,7 +117,7 @@ public class GeneticAlgorithm
             tournament_pop.getChromozom().Add(pop.getChromozom()[sayi]);
             i++;
         }
-        tournament_pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+        //tournament_pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
         return tournament_pop;
         
     }
@@ -184,13 +189,78 @@ public class GeneticAlgorithm
 
 }
 
+public class CarData
+{
+    GameObject car;
+    Chromosome chromosome;
+    public CarData(GameObject car, Chromosome chromosome )
+    {
+        this.car = car;
+        this.chromosome = chromosome;
+
+    }
+
+    public GameObject getCar()
+    {
+        return this.car;
+    }
+    public void setCar(GameObject car)
+    {
+        this.car = car;
+    }
+
+    public Chromosome getChromosome()
+    {
+        return this.chromosome;
+    }
+    public void setChromosome(Chromosome choromosome)
+    {
+        this.chromosome = choromosome;
+    }
+
+}
+
 public class generic : MonoBehaviour {
+    public GameObject Car;
+    List<GameObject> carList = new List<GameObject>();
+  
+    // Use this for initialization
+    void Start () {
+        int sil = 1;
+        Debug.Log("Hello"+sil);
+        Population pop = new Population(Global.POPULATION_SIZE);
+        //pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+        int i;
+        for (i = 0; i < Global.POPULATION_SIZE; i++)
+        {
 
-	// Use this for initialization
-	void Start () {
+            GameObject obj = Instantiate(Car, Car.transform.position, Car.transform.rotation) as GameObject;
+            
+            carList.Add(obj);
+           
+        }
 
+        int generation_number = 0;
+        i = 0;
+        while (pop.getChromozom()[0].getFitness() >= 0)
+        {
+            GeneticAlgorithm generic = new GeneticAlgorithm();
+            pop = generic.evolve(pop);
+            
+                foreach(GameObject x in carList)
+                {
+                    //Hareketleri yaptır.
+                    //hareketleri yaptırırken 
+                carController carCont=   x.GetComponent<carController>();
+                pop.getChromozom()[i].setFitness(carCont.roadNumber);
+                Debug.Log("roadNum:"+carCont.roadNumber);
+            }
+
+            //pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+            generation_number++;
+        }
       
-
+       
 
     }
 	
@@ -198,4 +268,8 @@ public class generic : MonoBehaviour {
 	void Update () {
 		
 	}
+
+
+   
+
 }
