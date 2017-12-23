@@ -22,5 +22,10 @@ public class Car : MonoBehaviour {
 
             roadNumber = rp.PieceNumber;
         }
+
+        if (collision.collider.tag.Equals("Wall"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

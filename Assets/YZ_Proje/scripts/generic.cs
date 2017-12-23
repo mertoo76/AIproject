@@ -84,7 +84,7 @@ public class Chromosome
 
     public float getFitness()
     {
-        return 0;
+        return fitness;
     }
 
     public void setFitness(float fitness)
@@ -221,19 +221,21 @@ public class CarData
 }
 
 public class generic : MonoBehaviour {
-    public float Speed = 5f;
-    public float TurnSpeed = 180f;
+    public float Speed = 1f;
+    public float TurnSpeed = 5;
     public GameObject Car;
     List<GameObject> carList = new List<GameObject>();
     public int count = 0;
     Population pop;
     int generation_number = 0;
     // Use this for initialization
+
     void Start () {
         int sil = 1;
         Debug.Log("Hello"+sil);
          pop = new Population(Global.POPULATION_SIZE);
-        //pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+        //pop.getChromozom().Sort((a,b) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+        
         int i;
 
         for (i = 0; i < Global.POPULATION_SIZE; i++)
@@ -244,13 +246,22 @@ public class generic : MonoBehaviour {
             carList.Add(obj);
 
         }
-
+        StartCoroutine(MyMethod());
 
     }
-   
+
+    IEnumerator MyMethod()
+    {
+        Debug.Log("Before Waiting 2 seconds");
+        yield return new WaitForSeconds(5);
+        Debug.Log("After Waiting 2 Seconds");
+    }
 
     // Update is called once per frame
     void FixedUpdate () {
+        
+        
+
         var gas = 1;
         var steer = 1;
         var moveDist = gas * Speed * Time.deltaTime;
@@ -263,42 +274,52 @@ public class generic : MonoBehaviour {
         count++;
         GeneticAlgorithm generic = new GeneticAlgorithm();
         pop = generic.evolve(pop);
-
-         i = 0;
+        StartCoroutine(MyMethod());
+        i = 0;
         int j = 0;
         foreach (GameObject x in carList)
         {
-            j = 0;
+            if (x != null) { 
+                j = 0;
             //Hareketleri yaptır.
             //hareketleri yaptırırken
             while (j < pop.getChromozom()[i].getGenes().Count)
             {
-               // Debug.Log("gene:"+ pop.getChromozom()[i].getGenes()[j]);
+
+                // Debug.Log("gene:"+ pop.getChromozom()[i].getGenes()[j]);
+
+
                 if (pop.getChromozom()[i].getGenes()[j] == 0)
                 {
                     x.transform.Translate(Vector3.forward * moveDist);
+                    // x.transform.position = x.transform.position + Vector3.forward * 1;
+                   // x.transform.position += x.transform.forward * Time.deltaTime * 1;
                 }
-                else if(pop.getChromozom()[i].getGenes()[j] == 1) { x.transform.Rotate(new Vector3(0, turnAngle, 0)); }
-                else if(pop.getChromozom()[i].getGenes()[j] == 2) { x.transform.Rotate(new Vector3(0, -turnAngle, 0)); }
+                  else if(pop.getChromozom()[i].getGenes()[j] == 1) { x.transform.Rotate(new Vector3(0, turnAngle, 0)); }
+                 else if(pop.getChromozom()[i].getGenes()[j] == 2) { x.transform.Rotate(new Vector3(0, -turnAngle, 0)); }
                 j++;
             }
-               
-           
+
+
             Car carCont = x.GetComponent<Car>();
             pop.getChromozom()[i].setFitness(carCont.roadNumber);
-            Debug.Log("roadNum:" + carCont.roadNumber);
+            Debug.Log("roadNum:" + pop.getChromozom()[i].getFitness());
             i++;
         }
+        }
+
+
         /*
-        foreach(GameObject x in carList)
+        foreach (GameObject x in carList)
         {
           
             Destroy(x);
         }
+        
         carList.Clear();
         */
-
-        //pop.getChromozom().Sort((a) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
+    
+       // pop.getChromozom().Sort((a,b) => (a.getFitness()>b.getFitness()));//fitnesa göre sort etmeyi ayarla
         generation_number++;
 
     }
