@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/YZ_Proje/mainScene.unity
+- path: Assets/YZ_Proje/yzScene.unity
   isLoaded: 1
   isActive: 1

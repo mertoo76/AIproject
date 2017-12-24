@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Car : MonoBehaviour {
-    public int roadNumber;
+    public int roadNumber=0;
     // Use this for initialization
     void Start () {
 		
